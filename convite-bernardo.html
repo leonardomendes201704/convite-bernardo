@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convite do Bernardo</title>
+  <style>
+    :root {
+      --page-bg: #e9a64e;
+      --focus: #fff7c7;
+      --shadow: rgba(43, 25, 12, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--page-bg);
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: start center;
+      padding: 0;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(255, 244, 197, 0.4), transparent 24%),
+        radial-gradient(circle at 92% 18%, rgba(255, 169, 76, 0.4), transparent 22%),
+        linear-gradient(160deg, #f2bd64 0%, #e08d3e 43%, #627d43 100%);
+    }
+
+    .invite-shell {
+      width: min(100%, 457px);
+      position: relative;
+      border-radius: 0 0 24px 24px;
+      filter: drop-shadow(0 26px 40px var(--shadow));
+    }
+
+    .invite-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0 0 22px 22px;
+      object-fit: contain;
+      object-position: top center;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .hotspot {
+      position: absolute;
+      display: block;
+      border: 0;
+      border-radius: 18px;
+      padding: 0;
+      color: transparent;
+      background: rgba(255, 255, 255, 0);
+      cursor: pointer;
+      -webkit-tap-highlight-color: rgba(255, 247, 199, 0.35);
+    }
+
+    .hotspot::after {
+      content: attr(aria-label);
+      position: absolute;
+      inset: -4px;
+      border-radius: 20px;
+      opacity: 0;
+      transform: scale(0.98);
+      transition: opacity 160ms ease, transform 160ms ease;
+      pointer-events: none;
+    }
+
+    .hotspot:hover::after {
+      opacity: 1;
+      background: rgba(255, 247, 199, 0.12);
+      box-shadow: 0 0 0 2px rgba(255, 247, 199, 0.28);
+    }
+
+    .hotspot:focus-visible::after {
+      opacity: 1;
+      transform: scale(1);
+      background: rgba(255, 247, 199, 0.16);
+      box-shadow:
+        0 0 0 3px var(--focus),
+        0 0 0 7px rgba(91, 48, 23, 0.55);
+    }
+
+    .hotspot:active::after {
+      opacity: 1;
+      transform: scale(0.94);
+      background: rgba(255, 247, 199, 0.2);
+    }
+
+    /*
+      A imagem original mede 457x800.
+      As regioes abaixo foram posicionadas em porcentagem para funcionar
+      em qualquer tamanho de tela mantendo a proporcao do convite.
+    */
+    .hotspot.confirm {
+      left: 18.2%;
+      top: 57.6%;
+      width: 19.8%;
+      height: 12.2%;
+    }
+
+    .hotspot.location {
+      left: 40.2%;
+      top: 57.6%;
+      width: 19.8%;
+      height: 12.2%;
+    }
+
+    .hotspot.gifts {
+      left: 62.6%;
+      top: 57.6%;
+      width: 19.8%;
+      height: 12.2%;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        overflow: hidden;
+      }
+
+      .invite-shell {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100vh;
+        overflow: hidden;
+      }
+
+      .invite-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+      }
+    }
+
+    @media (max-width: 380px) {
+      body {
+        padding: 0;
+        background: #e59a45;
+      }
+
+      .invite-shell,
+      .invite-image {
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="invite-shell" aria-label="Convite de aniversario do Bernardo">
+    <img
+      class="invite-image"
+      src="./assets/Convite-Bernardo.png"
+      alt="Convite de aniversario de 1 aninho do Bernardo com tema safari. Data 11/07, horario 15:30."
+      width="457"
+      height="800"
+    />
+
+    <button class="hotspot confirm" type="button" id="confirmBtn" aria-label="Confirmar presenca pelo WhatsApp" data-x="83" data-y="461" data-w="90" data-h="98">
+      <span class="sr-only">Confirmar Presenca</span>
+    </button>
+
+    <button class="hotspot location" type="button" id="mapBtn" aria-label="Abrir local da festa no Google Maps" data-x="184" data-y="461" data-w="90" data-h="98">
+      <span class="sr-only">Local da Festa</span>
+    </button>
+
+    <button class="hotspot gifts" type="button" id="giftBtn" aria-label="Abrir lista de presentes" data-x="286" data-y="461" data-w="90" data-h="98">
+      <span class="sr-only">Lista de Presentes</span>
+    </button>
+  </main>
+
+  <script>
+    // Troque o numero ficticio abaixo pelo WhatsApp real com DDI e DDD.
+    // Exemplo: 5511999999999
+    const WHATSAPP_NUMBER = "5500000000000";
+
+    const PARTY_ADDRESS = "Av Jundiai 374, Jardim Angela, Embu das Artes";
+    const GIFT_LIST_URL = "./lista-presentes.html";
+    const IMAGE_WIDTH = 457;
+    const IMAGE_HEIGHT = 800;
+
+    const shell = document.querySelector(".invite-shell");
+    const hotspots = document.querySelectorAll(".hotspot");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const mapBtn = document.getElementById("mapBtn");
+    const giftBtn = document.getElementById("giftBtn");
+
+    function positionHotspots() {
+      const bounds = shell.getBoundingClientRect();
+      const scale = Math.max(bounds.width / IMAGE_WIDTH, bounds.height / IMAGE_HEIGHT);
+      const renderedWidth = IMAGE_WIDTH * scale;
+      const renderedHeight = IMAGE_HEIGHT * scale;
+      const offsetX = (bounds.width - renderedWidth) / 2;
+      const offsetY = (bounds.height - renderedHeight) / 2;
+
+      hotspots.forEach((hotspot) => {
+        const x = Number(hotspot.dataset.x);
+        const y = Number(hotspot.dataset.y);
+        const width = Number(hotspot.dataset.w);
+        const height = Number(hotspot.dataset.h);
+
+        hotspot.style.left = `${offsetX + x * scale}px`;
+        hotspot.style.top = `${offsetY + y * scale}px`;
+        hotspot.style.width = `${width * scale}px`;
+        hotspot.style.height = `${height * scale}px`;
+      });
+    }
+
+    window.addEventListener("load", positionHotspots);
+    window.addEventListener("resize", positionHotspots);
+    positionHotspots();
+
+    confirmBtn.addEventListener("click", () => {
+      const message = encodeURIComponent("Olá! Confirmo presença no aniversário do Bernardo 🎉");
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+    });
+
+    mapBtn.addEventListener("click", () => {
+      const query = encodeURIComponent(PARTY_ADDRESS);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    });
+
+    giftBtn.addEventListener("click", () => {
+      window.location.href = GIFT_LIST_URL;
+    });
+  </script>
+</body>
+</html>
